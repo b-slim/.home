@@ -1,0 +1,15 @@
+term rxvt-256color
+hardstatus alwayslastline
+hardstatus string '%{i}%{ck}[%{W}%H%{c}][%{b}%= %-Lw%{ck}[%{W}%n-%f %t%{ck}]%{b}%+Lw%= %{c}][%{W}%Y-%m-%d %c%{c}]'
+screen -t bash 0
+screen -t bash 8
+screen -t bash 7
+screen -t bash 6
+screen -t bash 5
+screen -t bash 4
+screen -t bash 3
+screen -t bash 2
+screen -t bash 1
+startup_message off
+vbell off
+maptimeout 5

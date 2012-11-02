@@ -20,18 +20,19 @@ set shiftround "round indent to multiple of shiftwidth
 
 set hlsearch
 
+set expandtab
+
 "per-language indentation settings
-au filetype perl set shiftwidth=2 softtabstop=2 expandtab
-au filetype sh set shiftwidth=2 softtabstop=2 expandtab
-au filetype python set expandtab
+au filetype perl set shiftwidth=2 softtabstop=2
+au filetype sh set shiftwidth=2 softtabstop=2
 
 au BufNewFile,BufRead *.tt2 set filetype=html
 
-set wildignore=*.pyc,*.clas
+set wildignore=*.pyc,*.class
 
 set nobackup noswapfile
 
-set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+set listchars=tab:>-,trail:~,extends:>,precedes:<
 set list
 
 set showtabline=2
