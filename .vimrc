@@ -27,6 +27,7 @@ au filetype perl set shiftwidth=2 softtabstop=2
 au filetype sh set shiftwidth=2 softtabstop=2
 
 au BufNewFile,BufRead *.tt2 set filetype=html
+au BufNewFile,BufRead *.gradle setf groovy
 
 set wildignore=*.pyc,*.class
 
