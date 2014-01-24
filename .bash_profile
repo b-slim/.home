@@ -49,6 +49,7 @@ function prompt_command {
     local GIT_BRANCH=
     local GIT_DIRTY=
     local PWDNAME=$PWD
+    local HOSTNAME=`hostname -s`
 
     # beautify working directory name
     if [[ "${HOME}" == "${PWD}" ]]; then
