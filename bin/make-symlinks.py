@@ -3,7 +3,7 @@
 
 import os
 
-links_to_add = ['.vimrc', '.screenrc', '.hgrc', 'bin']
+links_to_add = ['.vimrc', '.screenrc', '.hgrc', '.bash_profile', 'bin']
 
 HOME = os.getenv('HOME', '/home/gvsmirnov')
 ROOT = os.path.abspath(
