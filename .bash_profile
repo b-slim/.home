@@ -114,7 +114,7 @@ function prompt_command {
     fi
 
     # set new color prompt
-    PS1="${color_user}${USER}${color_off}@${color_yellow}${HOSTNAME}${color_off}:${color_white}${PWDNAME}${color_off}${PS1_GIT}${PS1_VENV} ${FILL}\n➜ "
+    PS1="${color_user}${USER}${color_off}@${color_yellow}${HOSTNAME}${color_off}:${color_white}${PWDNAME}${color_off}${PS1_GIT}${PS1_VENV} ${FILL}\n$ "
 
     # get cursor position and add new line if we're not in first column
     # cool'n'dirty trick (http://stackoverflow.com/a/2575525/1164595)
