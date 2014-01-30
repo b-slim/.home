@@ -42,12 +42,13 @@ fi
 
 # some kind of optimization - check if git installed only on config load
 PS1_GIT_BIN=$(which git 2>/dev/null)
+PS1_HG_BIN=$(which hg 2>/dev/null)
 
 function prompt_command {
-    local PS1_GIT=
-    local PS1_VENV=
-    local GIT_BRANCH=
-    local GIT_DIRTY=
+    local PS1_VCS=
+    local VCS_NAME=
+    local VCS_INFO=
+    local VCS_DIRTY=
     local PWDNAME=$PWD
     local HOSTNAME=`hostname -s`
 
@@ -67,24 +68,24 @@ function prompt_command {
             # 'git repo for dotfiles' fix: show git status only in home dir and other git repos
             if [[ "${CUR_DIR}" != "${HOME}" ]] || [[ "${PWD}" == "${HOME}" ]]; then
                 # get git branch
-                GIT_BRANCH=$($PS1_GIT_BIN symbolic-ref HEAD 2>/dev/null)
-                if [[ ! -z $GIT_BRANCH ]]; then
-                    GIT_BRANCH=${GIT_BRANCH#refs/heads/}
+                VCS_NAME="git"
+                VCS_INFO=$($PS1_GIT_BIN symbolic-ref HEAD 2>/dev/null)
+                if [[ ! -z $VCS_INFO ]]; then
+                    VCS_INFO=${VCS_INFO#refs/heads/}
 
                     # get git status
                     local GIT_STATUS=$($PS1_GIT_BIN status --porcelain 2>/dev/null)
-                    [[ -n $GIT_STATUS ]] && GIT_DIRTY=1
+                    [[ -n $GIT_STATUS ]] && VCS_DIRTY=1
                 fi
             fi
         fi
     fi
 
     # build b/w prompt for git and virtual env
-    [[ ! -z $GIT_BRANCH ]] && PS1_GIT=" (git: ${GIT_BRANCH})"
-    [[ ! -z $VIRTUAL_ENV ]] && PS1_VENV=" (venv: ${VIRTUAL_ENV#$WORKON_HOME})"
+    [[ ! -z $VCS_NAME ]] && PS1_VCS=" (${VCS_NAME}: ${VCS_INFO})"
 
     # calculate prompt length
-    local PS1_length=$((${#USER}+${#HOSTNAME}+${#PWDNAME}+${#PS1_GIT}+${#PS1_VENV}+3))
+    local PS1_length=$((${#USER}+${#HOSTNAME}+${#PWDNAME}+${#PS1_VCS}+3))
     local FILL=
 
     # if length is greater, than terminal width
@@ -101,20 +102,17 @@ function prompt_command {
 
     if $color_is_on; then
         # build git status for prompt
-        if [[ ! -z $GIT_BRANCH ]]; then
-            if [[ -z $GIT_DIRTY ]]; then
-                PS1_GIT=" (git: ${color_green}${GIT_BRANCH}${color_off})"
+        if [[ ! -z $VCS_NAME ]]; then
+            if [[ -z $VCS_DIRTY ]]; then
+                PS1_VCS=" (${VCS_NAME}: ${color_green}${VCS_INFO}${color_off})"
             else
-                PS1_GIT=" (git: ${color_red}${GIT_BRANCH}${color_off})"
+                PS1_VCS=" (${VCS_NAME}: ${color_red}${VCS_INFO}${color_off})"
             fi
         fi
-
-        # build python venv status for prompt
-        [[ ! -z $VIRTUAL_ENV ]] && PS1_VENV=" (venv: ${color_blue}${VIRTUAL_ENV#$WORKON_HOME}${color_off})"
     fi
 
     # set new color prompt
-    PS1="${color_user}${USER}${color_off}@${color_yellow}${HOSTNAME}${color_off}:${color_white}${PWDNAME}${color_off}${PS1_GIT}${PS1_VENV} ${FILL}\n$ "
+    PS1="${color_user}${USER}${color_off}@${color_yellow}${HOSTNAME}${color_off}:${color_white}${PWDNAME}${color_off}${PS1_VCS} ${FILL}\n$ "
 
     # get cursor position and add new line if we're not in first column
     # cool'n'dirty trick (http://stackoverflow.com/a/2575525/1164595)
