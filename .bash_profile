@@ -8,7 +8,6 @@ shopt -s cdspell
 # save all lines of a multiple-line command in the same history entry (allows easy re-editing of multi-line commands)
 shopt -s cmdhist
 
-
 # setup color variables
 color_is_on=
 color_red=
@@ -51,6 +50,7 @@ function prompt_command {
     local VCS_DIRTY=
     local PWDNAME=$PWD
     local HOSTNAME=`hostname -s`
+    local BATTERY=`pmset -g batt | tail -1 | cut -f2`
 
     # beautify working directory name
     if [[ "${HOME}" == "${PWD}" ]]; then
@@ -85,7 +85,7 @@ function prompt_command {
     [[ ! -z $VCS_NAME ]] && PS1_VCS=" (${VCS_NAME}: ${VCS_INFO})"
 
     # calculate prompt length
-    local PS1_length=$((${#USER}+${#HOSTNAME}+${#PWDNAME}+${#PS1_VCS}+3))
+    local PS1_length=$((${#USER}+${#HOSTNAME}+${#PWDNAME}+${#BATTERY}+${#PS1_VCS}+6))
     local FILL=
 
     # if length is greater, than terminal width
@@ -112,7 +112,7 @@ function prompt_command {
     fi
 
     # set new color prompt
-    PS1="${color_user}${USER}${color_off}@${color_yellow}${HOSTNAME}${color_off}:${color_white}${PWDNAME}${color_off}${PS1_VCS} ${FILL}\n$ "
+    PS1="${color_user}${USER}${color_off}@${color_yellow}${HOSTNAME}${color_off}:${color_white}${PWDNAME}${color_off} (${BATTERY})${PS1_VCS} ${FILL}\n$ "
 
     # get cursor position and add new line if we're not in first column
     # cool'n'dirty trick (http://stackoverflow.com/a/2575525/1164595)
@@ -147,4 +147,9 @@ fi
 # bash aliases
 if [ -f ~/.bash_aliases ]; then
         . ~/.bash_aliases
+fi
+
+#machine-specific profile (e.g. $JAVA_HOME)
+if [ -f ~/.bash_local_profile ]; then
+        . ~/.bash_local_profile
 fi
