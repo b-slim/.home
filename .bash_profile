@@ -80,6 +80,21 @@ function prompt_command {
             fi
         fi
     fi
+    if [[ ! -z $PS1_HG_BIN ]]; then
+        #check we are in hg repo
+        local CUR_DIR=$PWD
+        while [[ ! -d "${CUR_DIR}/.hg" ]] && [[ ! "${CUR_DIR}" == "/" ]] && [[ ! "${CUR_DIR}" == "~" ]] && [[ ! "${CUR_DIR}" == "" ]]; do CUR_DIR=${CUR_DIR%/*}; done
+        if [[ -d "${CUR_DIR}/.hg" ]]; then
+            if [[ "${CUR_DIR}" != "${HOME}" ]] || [[ "${PWD}" == "${HOME}" ]]; then
+                VCS_NAME="hg"
+                VCS_INFO=$($PS1_HG_BIN branch 2>/dev/null)
+                if [[ ! -z $VCS_INFO ]]; then
+                    local HG_STATUS=$($PS1_HG_BIN status 2>/dev/null)
+                    [[ -n $HG_STATUS ]] && VCS_DIRTY=1
+                fi
+            fi
+        fi
+    fi
 
     # build b/w prompt for git and virtual env
     [[ ! -z $VCS_NAME ]] && PS1_VCS=" (${VCS_NAME}: ${VCS_INFO})"
