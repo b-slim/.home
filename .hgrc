@@ -2,6 +2,15 @@
 editor = vim
 username = Gleb Smirnov <me@gvsmirnov.ru>
 
+[phases]
+publish = False
+
 [extensions]
 color=
 pager=
+rebase=
+mq=
+graphlog=
+
+[pager]
+pager = LESS='FRX' less
