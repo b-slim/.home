@@ -163,6 +163,10 @@ if [ -f ~/bin/hg_completion.sh ]; then
   . ~/bin/hg_completion.sh
 fi
 
+if [ -f ~/bin/git_completion.sh ]; then
+  . ~/bin/git_completion.sh
+fi
+
 # bash aliases
 if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
