@@ -154,17 +154,21 @@ export GREP_OPTIONS="--color=auto"
 
 # bash completion
 if [ -f /usr/local/bin/brew ]; then
-        if [ -f `/usr/local/bin/brew --prefix`/etc/bash_completion ]; then
-                . `/usr/local/bin/brew --prefix`/etc/bash_completion
-        fi
+  if [ -f `/usr/local/bin/brew --prefix`/etc/bash_completion ]; then
+    . `/usr/local/bin/brew --prefix`/etc/bash_completion
+  fi
+fi
+
+if [ -f ~/bin/hg_completion.sh ]; then
+  . ~/bin/hg_completion.sh
 fi
 
 # bash aliases
 if [ -f ~/.bash_aliases ]; then
-        . ~/.bash_aliases
+  . ~/.bash_aliases
 fi
 
 #machine-specific profile (e.g. $JAVA_HOME)
 if [ -f ~/.bash_local_profile ]; then
-        . ~/.bash_local_profile
+  . ~/.bash_local_profile
 fi
