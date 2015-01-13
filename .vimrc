@@ -41,3 +41,4 @@ set showtabline=2
 set cursorline nocursorcolumn
 
 set number
+set backspace=indent,eol,start
