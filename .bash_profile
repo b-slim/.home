@@ -44,13 +44,19 @@ PS1_GIT_BIN=$(which git 2>/dev/null)
 PS1_HG_BIN=$(which hg 2>/dev/null)
 
 function prompt_command {
+    if [ -f ~/.bash_local_prompt ]; then
+        . ~/.bash_local_prompt
+    fi
+
     local PS1_VCS=
     local VCS_NAME=
     local VCS_INFO=
     local VCS_DIRTY=
     local PWDNAME=$PWD
     local HOSTNAME=`hostname -s`
-    local BATTERY=`pmset -g batt | tail -1 | cut -f2`
+    local BATTERY=`pmset -g batt | tail -1 | cut -f2 | cut -d \; -f1`
+    local JAVA_VERSION=$(java -version 2>&1 | head -2 | tail -1 | sed s/[^0-9._\\-]//g)
+    local DATE=$(date "+%Y-%m-%d %H:%M:%S")
 
     # beautify working directory name
     if [[ "${HOME}" == "${PWD}" ]]; then
@@ -100,7 +106,7 @@ function prompt_command {
     [[ ! -z $VCS_NAME ]] && PS1_VCS=" (${VCS_NAME}: ${VCS_INFO})"
 
     # calculate prompt length
-    local PS1_length=$((${#USER}+${#HOSTNAME}+${#PWDNAME}+${#BATTERY}+${#PS1_VCS}+6))
+    local PS1_length=$((${#USER}+${#HOSTNAME}+${#PWDNAME}+${#BATTERY}+${#DATE}+${#PS1_VCS}+${#JAVA_VERSION}+9))
     local FILL=
 
     # if length is greater, than terminal width
@@ -119,15 +125,15 @@ function prompt_command {
         # build git status for prompt
         if [[ ! -z $VCS_NAME ]]; then
             if [[ -z $VCS_DIRTY ]]; then
-                PS1_VCS=" (${VCS_NAME}: ${color_green}${VCS_INFO}${color_off})"
+              PS1_VCS="(${VCS_NAME}: ${color_green}${VCS_INFO}${color_off})"
             else
-                PS1_VCS=" (${VCS_NAME}: ${color_red}${VCS_INFO}${color_off})"
+              PS1_VCS="(${VCS_NAME}: ${color_red}${VCS_INFO}${color_off})"
             fi
         fi
     fi
 
     # set new color prompt
-    PS1="${color_user}${USER}${color_off}@${color_yellow}${HOSTNAME}${color_off}:${color_white}${PWDNAME}${color_off} (${BATTERY})${PS1_VCS} ${FILL}\n$ "
+    PS1="${color_user}${USER}${color_off}@${color_yellow}${HOSTNAME}${color_off}:${color_white}${PWDNAME}${color_off} (${DATE} ${BATTERY})${PS1_VCS}($JAVA_VERSION) ${FILL}\n$ "
 
     # get cursor position and add new line if we're not in first column
     # cool'n'dirty trick (http://stackoverflow.com/a/2575525/1164595)
