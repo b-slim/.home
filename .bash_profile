@@ -55,6 +55,7 @@ function prompt_command {
     local PWDNAME=$PWD
     local HOSTNAME=`hostname -s`
     local BATTERY=`pmset -g batt | tail -1 | cut -f2 | cut -d \; -f1`
+    local BATTERY_STATUS=`pmset -g batt | tail -1 | cut -f2 | cut -d \; -f2 | sed s/\ //g`
     local JAVA_VERSION=$(java -version 2>&1 | head -2 | tail -1 | sed s/[^0-9._\\-]//g)
     local DATE=$(date "+%Y-%m-%d %H:%M:%S")
 
@@ -102,7 +103,6 @@ function prompt_command {
         fi
     fi
 
-    # build b/w prompt for git and virtual env
     [[ ! -z $VCS_NAME ]] && PS1_VCS=" (${VCS_NAME}: ${VCS_INFO})"
 
     # calculate prompt length
@@ -122,7 +122,7 @@ function prompt_command {
     fi
 
     if $color_is_on; then
-        # build git status for prompt
+        # build vsc status for prompt
         if [[ ! -z $VCS_NAME ]]; then
             if [[ -z $VCS_DIRTY ]]; then
               PS1_VCS="(${VCS_NAME}: ${color_green}${VCS_INFO}${color_off})"
@@ -130,6 +130,15 @@ function prompt_command {
               PS1_VCS="(${VCS_NAME}: ${color_red}${VCS_INFO}${color_off})"
             fi
         fi
+
+        # color battery
+        local BATTERY_NUM=$(echo "$BATTERY" | sed s/%//g)
+        if [ "$BATTERY_NUM" -ge "25" ] && [ "$BATTERY_NUM" -le "50" ] ; then
+          BATTERY="${color_yellow}${BATTERY}${color_off}"
+        elif [ "$BATTERY_NUM" -lt "25" ] ; then
+          BATTERY="${color_red}${BATTERY}${color_off}"
+        fi
+
     fi
 
     # set new color prompt
